@@ -1,0 +1,104 @@
+<ion-app>
+  <ion-split-pane>
+    <ion-menu type="overlay">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ 'Menu' | translate:appPages }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="openCurrencyPage()" *ngIf="config.multiCurrency">
+              <ion-icon slot="icon-only" name="logo-usd"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="openLanguagePage()" *ngIf="config.multiLanguage">
+              <ion-icon name="globe"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list class="ion-no-padding">
+
+          <ion-item lines="full" *ngIf="shared.customerData.id==null" (click)="openLoginPage()">
+            <ion-img src="assets/icons_stripe.svg"></ion-img>
+            <div></div>
+            <ion-item lines="none">
+              <ion-avatar>
+                <img src="assets/avatar.png" />
+              </ion-avatar>
+              <ion-label class="ion-padding">
+                <h2>{{ 'Login & Registro' | translate:appPages }}</h2>
+                <p>{{ 'Inicia sesión o crea un cuenta gratis' | translate:appPages }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-item>
+
+          <ion-item lines="full" *ngIf="shared.customerData.id!=null" (click)="openPage('/settings')">
+            <ion-img src="assets/icons_stripe.svg"></ion-img>
+            <div></div>
+            <ion-item lines="none">
+              <ion-avatar class="nameTextAvatar">
+                <div id="nametext">{{getNameFirstLetter()}}</div>
+              </ion-avatar>
+              <ion-label class="ion-padding">
+                <h2>{{shared.customerData.first_name +"&nbsp;"+shared.customerData.last_name}}</h2>
+                <p>{{shared.customerData.email}}</p>
+              </ion-label>
+            </ion-item>
+          </ion-item>
+
+
+
+          <ion-item lines="full" *ngFor="let p of appPages" class="ion-no-padding">
+            <ion-grid class="ion-no-padding">
+              <ion-row class="ion-no-padding" (click)="openPage(p.url)" *ngIf="!p.items">
+                <ion-col class="ion-align-self-center" size="2">
+                  <img *ngIf="showImg()" src="{{p.img}}">
+                  <ion-icon *ngIf="!showImg()" name="{{p.icon}}"></ion-icon>
+                </ion-col>
+                <ion-col class="col-text" class="ion-align-self-center" size="8">
+                  <p>
+                    {{p.name | translate}}
+                  </p>
+                </ion-col>
+              </ion-row>
+              <ion-row class="ion-no-padding" *ngIf="p.items" (click)="expandItem(p)">
+                <ion-col class="ion-align-self-center" size="2">
+                  <img *ngIf="showImg()" src="{{p.img}}">
+                  <ion-icon *ngIf="!showImg()" name="{{p.icon}}"></ion-icon>
+                </ion-col>
+                <ion-col class="col-text" class="ion-align-self-center" size="8">
+                  <p>
+                    {{p.name | translate}}
+                  </p>
+                </ion-col>
+                <ion-col class="ion-align-self-center" size="2">
+                  <ion-icon name="add" *ngIf="!p.expanded"></ion-icon>
+                  <ion-icon name="remove" *ngIf="p.expanded"></ion-icon>
+                </ion-col>
+              </ion-row>
+              <app-menu-component expandHeight="700px" *ngIf="p.items" [expanded]="p.expanded" class="ion-no-padding">
+                <ion-item class="item-inner-list" lines="full" *ngFor="let list of p.items;"
+                  (click)="openPage(list.url)">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col class="ion-align-self-center" size="2">
+                        <ion-icon name="remove"></ion-icon>
+                      </ion-col>
+                      <ion-col class="ion-align-self-center">
+                        <p><span *ngIf="p.name!='Shop'">{{p.name | translate}} - </span> {{list.name| translate}}</p>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+              </app-menu-component>
+            </ion-grid>
+          </ion-item>
+        </ion-list>
+        <p class="primary-light-Color" #my id="my">Just to get color. Donot remove this.
+        </p>
+        <p class="primary-Color" #primary id="primary">Just to get color. Donot remove this.
+        </p>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet main></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

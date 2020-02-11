@@ -1,0 +1,237 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button icon="arrow-round-back"></ion-back-button>
+    </ion-buttons>
+    <ion-title> {{'Mi carrito'| translate }} </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear">
+        <ion-icon name="basket"></ion-icon>
+        <ion-badge>{{shared.cartTotalItems()}}</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid class="ion-no-padding grid-empty" *ngIf="products.length==0 && loadingServerData">
+    <ion-row class="ion-no-padding">
+      <ion-col size="12" class="ion-no-padding">
+        <ion-icon name="basket"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-no-padding">
+      <ion-col size="12" class="ion-no-padding">
+        <h4>{{'Tu carrito está vacío'|translate}}</h4>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-no-padding">
+      <ion-col size="12" class="ion-no-padding">
+        <h5>{{'Seguir comprando'|translate}}</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-no-padding">
+      <ion-col size="12" class="ion-no-padding">
+        <ion-button color="secondary" (click)="openProductsPage()">{{'Explorar'|translate}}</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card class="ion-padding" *ngFor="let product of products">
+    <ion-card-header class="ion-no-padding">
+      <ion-card-subtitle>
+        <h3> {{product.name}} </h3>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid class="ion-no-padding">
+        <!-- <ion-row>
+          <ion-col size="3">
+            <ion-img src="{{product.image}}"></ion-img>
+          </ion-col>
+          <ion-col class="col-price" size="5">
+            <p>{{'Price' |translate}}</p>
+            <p>{{'Quantity' |translate}}</p>
+            <p><b>{{'Sub Total' |translate}}</b></p>
+          </ion-col>
+          <ion-col class="col-price-ori" size="4">
+            <p class="para-del" [innerHTML]="product.price_html"></p>
+            <div class="div-btn">
+              <ion-button size="small" fill="outline" (click)="qunatityMinus(product);"
+                *ngIf="!product.sold_individually">
+                <p>-</p>
+              </ion-button>
+              <span>{{product.quantity}}</span>
+              <ion-button class="add-btn" size="small" fill="outline" (click)="qunatityPlus(product);"
+                *ngIf="!product.sold_individually">
+                <p>+</p>
+              </ion-button>
+            </div>
+            <br /><br />
+            <p class="para-price-ori">{{product.subtotal | curency}}</p>
+          </ion-col>
+        </ion-row> -->
+
+        <ion-row>
+          <ion-col size="3">
+            <ion-img class="product-image" src="{{product.image}}"></ion-img>
+          </ion-col>
+          <ion-col>
+            <ion-row>
+              <ion-col class="ion-text-left">
+                {{'Precio' |translate}}&nbsp;:
+              </ion-col>
+              <ion-col class="ion-text-right">
+                {{product.price}}
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let att of product.meta_data">
+              <ion-col class="ion-text-left">
+                {{att.key}}&nbsp;:
+              </ion-col>
+              <ion-col class="ion-text-right">
+                {{att.value}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-left">
+                <span style="margin: auto;">{{'Cantidad' |translate}}</span>&nbsp;:
+              </ion-col>
+              <ion-col class="ion-text-right ion-no-padding">
+                <ion-row class="ion-float-right">
+                  <ion-icon color="secondary" name="remove-circle" (click)="qunatityMinus(product)"
+                    *ngIf="!product.sold_individually">
+                  </ion-icon>
+                  <span class="quantity">{{product.quantity}}</span>
+                  <ion-icon color="secondary" name="add-circle" (click)="qunatityPlus(product);"
+                    *ngIf="!product.sold_individually">
+                  </ion-icon>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-left">
+                <strong> {{'Sub Total' |translate}}</strong>&nbsp;:
+              </ion-col>
+              <ion-col class="ion-text-right">
+                <strong> {{product.subtotal | curency}}</strong>
+              </ion-col>
+            </ion-row>
+            <!-- <ion-row>
+              <span *ngFor="let att of product.meta_data">
+                <ion-badge mode="ios" color="secondary">
+                  {{att.key}}&nbsp;: &nbsp;{{att.value}}
+                </ion-badge>&nbsp;
+                <ion-badge mode="ios" color="secondary">
+                  {{att.key}}&nbsp;: &nbsp;{{att.value}}
+                </ion-badge>&nbsp;
+                <ion-badge mode="ios" color="secondary">
+                  {{att.key}}&nbsp;: &nbsp;{{att.value}}
+                </ion-badge>&nbsp;
+              </span>
+            </ion-row> -->
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-button color="secondary" (click)="getSingleProductDetail(product.product_id)">{{'Ver' | translate}}
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="removeCart(product.cart_id);">{{'Remover' | translate}}
+          </ion-button>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <div *ngIf="products.length!=0">
+    <ion-card class="card-product" *ngFor="let coupon of shared.couponArray">
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="6">
+            {{'Código de cupón'|translate}}
+          </ion-col>
+          <ion-col size="6" class="ion-text-right">
+            {{coupon.code}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="6">
+            {{'Cantidad de cupón'|translate}}
+          </ion-col>
+          <ion-col size="6" class="ion-text-right">
+            {{coupon.amount| curency}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" *ngIf="coupon.discount_type == 'percent'">
+            {{'Un porcentaje de descuento por el carrito entero'|translate}}
+          </ion-col>
+          <ion-col size="12" *ngIf="coupon.discount_type == 'fixed_cart'">
+            {{'Un total fijo de descuento por el carrito entero'|translate}}
+          </ion-col>
+          <ion-col size="12" *ngIf="coupon.discount_type == 'fixed_product'">
+            {{'Un total fijo de descuento para articulos seleccionados solamente'|translate}}
+          </ion-col>
+          <ion-col size="12" *ngIf="coupon.discount_type == 'percent_product'">
+            {{'Un porcentaje de descuento para articulos seleccionados solamente'|translate}}
+          </ion-col>
+          <ion-col size="12">
+            <ion-button small color="secondary" (click)="deleteCoupon(coupon.code)">{{'Remover'|translate}}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="ion-padding">
+      <ion-card-header class="ion-no-padding">
+        <ion-card-subtitle>
+          <h3 id="copounlist" *ngIf="!config.appInProduction" (click)="couponslist()">
+            {{'Listado de cupones de códgo'|translate}}
+          </h3>
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-input placeholder="{{'coupon code'|translate}}" [(ngModel)]="c"></ion-input>
+          <ion-button color="secondary" slot="end" [disabled]="c==''" (click)="getCoupon(c)">{{'Aplicar'|translate}}
+          </ion-button>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <ion-card *ngIf="products.length!=0">
+    <ion-card-content style="padding: 10px;">
+      <ion-row>
+        <ion-col size="6">
+          {{'SubTotal'|translate}}
+        </ion-col>
+        <ion-col size="6" class="ion-text-right">
+          {{subtotal| curency}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          {{'Descuento'|translate}}
+        </ion-col>
+        <ion-col size="6" class="ion-text-right">
+          - {{(subtotal-total)| curency}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          {{'Total'|translate}}
+        </ion-col>
+        <ion-col size="6" class="ion-text-right">
+          {{total| curency}}
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-footer *ngIf="products.length!=0">
+  <ion-button expand="full" solid block color="secondary" (click)="proceedToCheckOut()">
+    {{'Proceder'|translate}}
+  </ion-button>
+</ion-footer>

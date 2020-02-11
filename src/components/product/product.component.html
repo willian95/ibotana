@@ -1,0 +1,94 @@
+<div class="product-component animate-item">
+  <!-- skeleton text until data not loaded -->
+  <div *ngIf="p==1" style="padding-left: 10px;">
+    <ion-skeleton-text animated style="width: 100%; height: 110px;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 80%; height: 15px;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 60%; height: 15px;">
+    </ion-skeleton-text>
+    <ion-skeleton-text animated *ngIf="config.cartButton==1" style="width: 100%; height: 25px;">
+    </ion-skeleton-text>
+
+  </div>
+
+  <div *ngIf="p!=1">
+
+    <ion-card *ngIf="type=='normal' || type=='recent' || type=='wishList'" class="animated fadeIn">
+      <div>
+        <div *ngIf="p.on_sale==true">{{ 'SALE' | translate }}</div>
+        <div *ngIf="p.featured">{{'Featured' | translate }}</div>
+      </div>
+      <ion-img id="newimage" src="assets/badge_new.png" *ngIf="checkProductNew()"></ion-img>
+      <img id="image" *ngIf="p.images.length!=0" src="{{p.images[0].src}}" (click)="showProductDetail()">
+      <img id="image" *ngIf="p.images.length==0" src="assets/woocommerce-placeholder.png" (click)="showProductDetail()">
+
+      <p (click)="showProductDetail()">{{p.name}}</p>
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-no-padding">
+          <ion-col size="10" class="ion-no-padding">
+            <h4 [innerHTML]="p.price_html"></h4>
+          </ion-col>
+          <ion-col size="2" class="ion-text-center ion-no-padding">
+            <ion-icon (click)="clickWishList()" *ngIf="isLiked==0" name="heart-empty"></ion-icon>
+            <ion-icon (click)="clickWishList()" *ngIf="isLiked!=0" name="heart"></ion-icon>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-no-padding">
+          <ion-button *ngIf="type=='recent'" style="z-index: 10;" color="danger" (click)="removeRecent()">
+            {{'REMOVE'|translate}}</ion-button>
+          <ion-button *ngIf="type=='wishList'" style="z-index: 10;" color="danger" (click)="removeWishList()">
+            {{'REMOVE'|translate}}
+          </ion-button>
+        </ion-row>
+        <ion-row class="ion-no-padding" *ngIf="type=='normal'">
+          <ion-button color="secondary" *ngIf="config.cartButton==1 && p.stock_status=='instock' && p.type=='simple'"
+            (click)="addToCart(p);">{{'ADD TO CART'|translate}}
+          </ion-button>
+          <ion-button color="secondary" (click)="showProductDetail()"
+            *ngIf="config.cartButton==1 && p.stock_status=='instock' && p.type!='simple'">{{'DETAILS'|translate}}
+          </ion-button>
+          <ion-button color="secondary" color="danger" *ngIf="config.cartButton==1 && p.stock_status!='instock'">
+            {{'OUT OF STOCK'|translate}}
+          </ion-button>
+        </ion-row>
+      </ion-grid>
+      <ion-row class="card-add-cart" *ngIf="isInCart()" (click)="showProductDetail()">
+        <ion-icon name="checkmark-circle"></ion-icon>
+      </ion-row>
+    </ion-card>
+
+    <!-- //====================================  list view for shop page ==================================== -->
+    <ion-item lines="none" *ngIf="type=='list'" class="animate-item">
+      <ion-thumbnail slot="start">
+        <ion-img class="badge-img" src="assets/badge_new.png" *ngIf="checkProductNew()"></ion-img>
+        <img *ngIf="p.images.length!=0" src="{{p.images[0].src}}" (click)="showProductDetail()">
+        <img *ngIf="p.images.length==0" src="assets/woocommerce-placeholder.png" (click)="showProductDetail()">
+      </ion-thumbnail>
+      <ion-label>
+        <p (click)="showProductDetail()">{{p.name}}</p>
+        <p [innerHTML]="p.price_html"></p>
+        <ion-row>
+          <ion-col>
+            <ion-button color="secondary" *ngIf="config.cartButton==1 && p.stock_status=='instock' && p.type =='simple'"
+              (click)="addToCart(p)" item-start>{{'ADD TO CART'|translate}}</ion-button>
+            <ion-button color="secondary" (click)="showProductDetail()"
+              *ngIf="config.cartButton==1 && p.stock_status=='instock' && p.type!='simple'" item-start>
+              {{'DETAILS'|translate}}</ion-button>
+            <ion-button color="danger" *ngIf="config.cartButton==1 && p.stock_status!='instock'" item-start>
+              {{'OUT OF STOCK'|translate}}</ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-icon id="list-heart-icon" *ngIf="isLiked==0" (click)="clickWishList()" name="heart-empty"></ion-icon>
+        <ion-icon id="list-heart-icon" *ngIf="isLiked!=0" (click)="clickWishList()" name="heart"></ion-icon>
+      </ion-label>
+
+      <div class="img-div">
+        <div *ngIf="p.on_sale==true" class="sale">{{'SALE'|translate}}</div>
+        <div *ngIf="p.featured" class="featured">{{'Featured'|translate}}</div>
+      </div>
+      <ion-row class="card-add-cart" *ngIf="isInCart()" (click)="showProductDetail()">
+        <ion-icon name="checkmark-circle"></ion-icon>
+      </ion-row>
+    </ion-item>
+  </div>
+
+</div>
