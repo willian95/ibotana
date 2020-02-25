@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button icon="arrow-round-back"></ion-back-button>
-    </ion-buttons>
-    <ion-title> {{'Shop'| translate }} </ion-title>
+    <ion-menu-button slot="start">
+      <ion-icon name="menu" style="color: #3498db"></ion-icon>
+    </ion-menu-button>
+    <ion-title> 
+        <ion-img src="assets/logo_header-4.png" alt="logo"></ion-img> 
+    </ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" routerLink="/search" routerDirection="forward">
         <ion-icon slot="icon-only" name="search"></ion-icon>
@@ -15,18 +17,44 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar class="segmentToolbar">
-    <ion-slides [options]="sliderConfig" [class.disable]="products[0]==1">
-      <ion-slide [class.selected]="selectedTab==''" *ngIf="shared.allCategories!=null" (click)="changeTab('')">
-        {{'All'|translate}}</ion-slide>
-      <ion-slide [class.selected]="selectedTab==c.id" *ngFor="let c of shared.allCategories" (click)="changeTab(c)">
-        {{c.name}}
-      </ion-slide>
-    </ion-slides>
-  </ion-toolbar>
+  <!--<ion-header>
+    <ion-toolbar >
+      <ion-menu-button slot="start">
+        <ion-icon name="menu" style="color: #3498db"></ion-icon>
+      </ion-menu-button>
+      <ion-title>
+        <ion-img src="assets/logo_header-4.png" alt="logo"></ion-img>
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" routerLink="/search" routerDirection="forward">
+          <ion-icon slot="icon-only" name="search" style="color: #3498db"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" routerLink="/cart" routerDirection="forward">
+          <ion-icon name="basket" style="color: #3498db"></ion-icon>
+          <ion-badge color="secondary">{{shared.cartTotalItems()}}</ion-badge>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>-->
+
+
+  
 </ion-header>
 
 <ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)" id="productContent">
+
+    <app-banner></app-banner>
+
+    <ion-toolbar class="segmentToolbar">
+        <ion-slides [options]="sliderConfig" [class.disable]="products[0]==1">
+          <ion-slide [class.selected]="selectedTab==''" *ngIf="shared.allCategories!=null" (click)="changeTab('')">
+            {{'All'|translate}}</ion-slide>
+          <ion-slide [class.selected]="selectedTab==c.id" *ngFor="let c of shared.allCategories" (click)="changeTab(c)">
+            {{c.name}}
+          </ion-slide>
+        </ion-slides>
+      </ion-toolbar>
+
   <ion-grid *ngIf="productView=='grid'" class="ion-no-padding">
     <ion-row class="ion-no-padding">
       <ion-col *ngFor="let p of products" size="6" class="ion-no-padding">

@@ -36,6 +36,7 @@ export class HomePage implements OnInit {
   }
   ionViewDidEnter() {
     this.shared.hideSplashScreen();
+    this.router.navigateByUrl("/products/0/0/newest");
   }
 
 

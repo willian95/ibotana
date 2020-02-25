@@ -286,7 +286,8 @@ export class AppComponent {
   }
   openHomePage() {
     console.log("open home page")
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl("products/0/0/newest")
+    //this.router.navigateByUrl('/home');
     /*if (this.config.homePage == 1) { this.navCtrl.navigateRoot("/home"); }
     if (this.config.homePage == 2) { this.navCtrl.navigateRoot("/home2"); }
     if (this.config.homePage == 3) { this.navCtrl.navigateRoot("/home3"); }
