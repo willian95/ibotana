@@ -63,7 +63,7 @@
     "core-js": "^2.5.4",
     "es6-promise-plugin": "^4.2.2",
     "ionic-plugin-deeplinks": "^1.0.20",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "onesignal-cordova-plugin": "^2.6.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
